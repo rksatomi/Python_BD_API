@@ -1,0 +1,23 @@
+#importação da biblioteca comunicação com banco de dados sqlite3
+import sqlite3
+#importação de biblioteca para informar o caminho
+from pathlib import Path
+#indicação de caminho
+ROOT_PATH = Path(__file__).parent
+#criação de comunicação com banco de dados/criação do banco na mesma pasta
+conexao=sqlite3.connect(ROOT_PATH/"meu_banco.db")  
+#função de interação com o banco de dados
+cursor =conexao.cursor()
+cursor.row_factory=sqlite3.Row
+
+
+#tratamento de execução de inserção de dados ao banco de dados, caso uma das ações 
+# de erro, sistema retorna ao ponto incial, desfando todas as ações anteriores.
+try:
+    cursor.execute("INSERT INTO clientes (nome, email) VALUES(?,?);",("Teste 3","teste@gmail.com"))
+    cursor.execute("INSERT INTO clientes (nome, email) VALUES(?,?);",("Teste 4","teste4@gmail.com"))
+    conexao.commit()
+except Exception as exc:
+    print(f"Um erro ocorreu {exc}, não possível realizar as operações solicitadas")
+    conexao.rollback()
+    #
